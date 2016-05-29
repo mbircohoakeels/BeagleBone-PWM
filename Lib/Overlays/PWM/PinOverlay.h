@@ -8,25 +8,38 @@
 #include "../iDeviceOverlay.h"
 #include "../../Exceptions/ExceptionAid.h"
 
-class PinOverlay {
+#define MAX_BUF 255
 
-    namespace abPWM {
+namespace abPWM {
 
-        class PWMOverlay : public iDeviceOverlay {
-        public:
+    class PinOverlay : public iDeviceOverlay {
 
-            PWMOverlay( ) throw( PWMSetupException& );
 
-            struct OverlaySettings {
-                const char *Overlay = "am33xx_pwm";
-                const char *SearchFile = "/sys/devices/ocp.3/48300000.epwmss/modalias";
-                bool OverlayLoaded;
-            } Settings;
+    public:
 
-        };
+        PinOverlay( int _BLOCK, int _PIN ) throw( PWMSetupException& );
 
-    }
-};
+        struct OverlaySettings {
+            const char *Overlay = "bone_pwm_P";
+            const char *OverlayDir = "/sys/devices/ocp.3/";
+            const char *SearchFile = "pwm_test_P";
+            bool OverlayLoaded;
+        } Settings;
+
+    private:
+        void SetBlock( int _BLOCK );
+        void SetPin( int _PIN );
+
+        void FindPinDir( );
+
+        char PinOverlayDir[MAX_BUF]; //!< Stores the PWM folder name
+
+        int Pin;
+        int Block;
+
+    };
+
+}
 
 
 #endif //BEAGLEBONE_PWM_PINOVERLAY_H
