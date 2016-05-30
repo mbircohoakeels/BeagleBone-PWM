@@ -12,7 +12,7 @@ namespace abPWM {
         this->SetPinNum( (PinNums)_pin );
 
         if( this->_PWMOverlay.Settings.OverlayLoaded ) {
-            this->_PinOverlay = new PinOverlay( this->PinNum, this->BlockNum );
+            this->_PinOverlay = new PinOverlay( this->BlockNum, this->PinNum );
 
             if( this->_PinOverlay->Settings.OverlayLoaded ) {
                 //good to go

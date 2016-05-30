@@ -18,6 +18,7 @@
 #define ANALOGDEVICE_OVERLAYS_H
 
 #define RETRIES 99
+#define DEBUG
 
 #define SLOTS_DIR "/sys/devices/bone_capemgr.9/slots" //!< Full system path to SLOTS, used to export device tree overlays.
 

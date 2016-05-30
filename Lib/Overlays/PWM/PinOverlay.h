@@ -33,6 +33,7 @@ namespace abPWM {
         void FindPinDir( );
 
         char PinOverlayDir[MAX_BUF]; //!< Stores the PWM folder name
+        char PinOverlayName[24];
 
         int Pin;
         int Block;

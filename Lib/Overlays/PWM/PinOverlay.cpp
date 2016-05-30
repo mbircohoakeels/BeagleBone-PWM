@@ -12,8 +12,15 @@ namespace abPWM {
         this->SetPin( _PIN );
         this->FindPinDir( );
 
-        if( ! this->Settings.OverlayLoaded )
-            this->Settings.OverlayLoaded = this->Load( this->Settings.Overlay );
+        if( ! this->Settings.OverlayLoaded ) {
+            snprintf( this->PinOverlayName,
+                      sizeof( this->PinOverlayName ),
+                      "%s%d_%d",
+                      this->Settings.Overlay,
+                      this->Block,
+                      this->Pin );
+            this->Settings.OverlayLoaded = this->Load( this->PinOverlayName );
+        }
 
         if( !this->Settings.OverlayLoaded ) {
             snprintf( this->ErrMessage, sizeof( this->ErrMessage ),
