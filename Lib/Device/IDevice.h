@@ -44,6 +44,7 @@ namespace abIDevice {
         /brief All devices implementing this interface will require this functionality.
         */
         virtual int ConnectToDevice( ) = 0;
+
     protected:
     };
 }
