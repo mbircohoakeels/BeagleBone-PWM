@@ -20,8 +20,8 @@ namespace abPWM {
 
     }
 
-    void PWMDevice::ReadDevice( ValType _ft ) {
-        this->SetValType( _ft );
+    void PWMDevice::ReadDevice( ValType _vt ) {
+        this->SetValType( _vt );
         this->ReadDevice( 1024 );
     }
 
@@ -49,8 +49,8 @@ namespace abPWM {
         }
     }
 
-    void PWMDevice::WriteToDevice( ValType _ft, long int _val ) throw( PWMSetupException& ) {
-        this->SetValType( _ft );
+    void PWMDevice::WriteToDevice( ValType _vt, long int _val ) throw( PWMSetupException& ) {
+        this->SetValType( _vt );
         this->SetWriteVal( _val );
         this->WriteToDevice( 1024 );
     }
@@ -80,41 +80,50 @@ namespace abPWM {
 
     void PWMDevice::Set( ValType _vt, long _val ) { this->WriteToDevice( _vt, _val ); }
 
-    long PWMDevice::GetCurrentReading( ValType _ft ) {
-        this->ReadDevice( _ft );
+    long PWMDevice::GetCurrentReading( ValType _vt ) {
+        this->ReadDevice( _vt );
         if( this->CurrentReading.length() > 0 ) {
-            if( _ft != Run ) {
+            if( _vt == Run )
+                return ( this->CurrentReading.compare( "1" ) == 0 ) ? true : false;
+            else if( _vt == Power_Control ) {
+                this->Power_ControlStr = this->CurrentReading;
+                return 1;
+            }
+            else
                 return stoi( this->CurrentReading );
-            }
-            else{
-                string isTrue ("1");
-                return ( this->CurrentReading.compare( isTrue ) == 0 ) ? true : false;
-            }
         }
         else
             return 1;
     }
 
     char* PWMDevice::GetFilePath( ){
-        switch( this->FT ) {
+        switch( this->VT ) {
             case Run : return this->RunPath;
             case Duty : return this->DutyPath;
             case Period : return this->PeriodPath;
+            case Polarity : return this->PolarityPath;
+            case Power_Control : return this->PowerControlPath;
+            case Power_RunTime_Active : return this->PowerRunTime_ActivePath;
+            case Power_RunTime_Suspended : return this->PowerRunTime_SuspendedPath;
             default: return this->DutyPath;
         }
     }
 
     void PWMDevice::SetFilePaths( ) {
+        snprintf( this->RunPath, sizeof( this->RunPath ), "%s/%s", this->_PinOverlay->PinOverlayDir, "run" );
         snprintf( this->DutyPath, sizeof( this->DutyPath ), "%s/%s", this->_PinOverlay->PinOverlayDir, "duty" );
         snprintf( this->PeriodPath, sizeof( this->PeriodPath ), "%s/%s", this->_PinOverlay->PinOverlayDir, "period" );
-        snprintf( this->RunPath, sizeof( this->RunPath ), "%s/%s", this->_PinOverlay->PinOverlayDir, "run" );
+        snprintf( this->PolarityPath, sizeof( this->PolarityPath ), "%s/%s", this->_PinOverlay->PinOverlayDir, "polarity" );
+        snprintf( this->PowerControlPath, sizeof( this->PowerControlPath ), "%s/%s", this->_PinOverlay->PinOverlayDir, "power/control" );
+        snprintf( this->PowerRunTime_ActivePath, sizeof( this->PowerRunTime_ActivePath ), "%s/%s", this->_PinOverlay->PinOverlayDir, "power/runtime_active_time" );
+        snprintf( this->PowerRunTime_SuspendedPath, sizeof( this->PowerRunTime_SuspendedPath ), "%s/%s", this->_PinOverlay->PinOverlayDir, "power/runtime_suspended_time" );
     }
 
     void PWMDevice::SetPinNum( PWMPins _pin ) { this->PinNum = _pin; }
 
     void PWMDevice::SetBlockNum( PinBlocks _block ) { this->BlockNum = _block; }
 
-    void PWMDevice::SetValType( ValType _ft ) { this->FT = _ft; }
+    void PWMDevice::SetValType( ValType _vt ) { this->VT = _vt; }
 
     void PWMDevice::SetWriteVal( long _val ) { this->Val2Write = _val; }
 

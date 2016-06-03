@@ -23,11 +23,13 @@ namespace abPWM {
         PWMDevice( PinBlocks _block, PWMPins _pin ) throw( PWMSetupException& );
 
         enum ValType{
-            Run, Duty, Period
+            Run, Duty, Period, Polarity, Power_Control, Power_RunTime_Active, Power_RunTime_Suspended
         };
 
         PinBlocks BlockNum;
         PWMPins PinNum;
+
+        string Power_ControlStr;
 
         long Get( ValType );
 
@@ -35,9 +37,9 @@ namespace abPWM {
 
     private:
 
-        ValType FT;
+        ValType VT;
 
-        void ReadDevice( ValType _ft );
+        void ReadDevice( ValType );
 
         short ReadDevice( size_t _BufferSize );
 
@@ -47,11 +49,11 @@ namespace abPWM {
 
         int WriteToDevice( size_t _BufferSize ) throw( PWMSetupException& );
 
-        void WriteToDevice( ValType _ft, long int _val ) throw( PWMSetupException& );
+        void WriteToDevice( ValType, long int _val ) throw( PWMSetupException& );
 
         int OpenDevice( ) throw( PWMSetupException& );
 
-        long GetCurrentReading( ValType _ft );
+        long GetCurrentReading( ValType );
 
         char* GetFilePath( );
 
@@ -59,7 +61,7 @@ namespace abPWM {
 
         void SetBlockNum( PinBlocks _block );
 
-        void SetValType( ValType _ft );
+        void SetValType( ValType );
 
         void SetWriteVal( long int _val );
 
@@ -78,6 +80,14 @@ namespace abPWM {
         char PeriodPath[ 50 ];
 
         char RunPath[ 50 ];
+
+        char PolarityPath[ 50 ];
+
+        char PowerControlPath[ 100 ];
+
+        char PowerRunTime_ActivePath[ 100 ];
+
+        char PowerRunTime_SuspendedPath[ 100 ];
 
     };
 
