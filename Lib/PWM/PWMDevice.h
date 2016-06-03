@@ -5,6 +5,8 @@
 #ifndef BEAGLEBONE_PWM_PWMDEVICE_H
 #define BEAGLEBONE_PWM_PWMDEVICE_H
 
+#include <fstream>
+
 #include "../Device/IDevice.h"
 #include "../Exceptions/ExceptionAid.h"
 #include "../Overlays/PWM/PWMOverlay.h"
@@ -12,11 +14,30 @@
 
 namespace abPWM {
 
-    class PWMDevice : public abIDevice::IDevice {
+    using namespace abIDevice;
+
+    class PWMDevice : public abIDevice::IDevice, abPWM::PWMOverlay {
 
     public:
 
-        PWMDevice( int _block, int _pin );
+        PWMDevice( PinBlocks _block, PWMPins _pin ) throw( PWMSetupException& );
+
+        enum ValType{
+            Run, Duty, Period
+        };
+
+        PinBlocks BlockNum;
+        PWMPins PinNum;
+
+        long Get( ValType );
+
+        void Set( ValType, long _val );
+
+    private:
+
+        ValType FT;
+
+        void ReadDevice( ValType _ft );
 
         short ReadDevice( size_t _BufferSize );
 
@@ -26,34 +47,37 @@ namespace abPWM {
 
         int WriteToDevice( size_t _BufferSize ) throw( PWMSetupException& );
 
+        void WriteToDevice( ValType _ft, long int _val ) throw( PWMSetupException& );
+
         int OpenDevice( ) throw( PWMSetupException& );
 
-        enum BlockNums {
-            P9 = 9, //!< P9 on your BBB | USB facing you, P9 is the pin block on the left hand side.
-            P8 = 8, //!< P8 on your BBB | USB facing you, P8 is the pin block on the right hand side.
-        };
+        long GetCurrentReading( ValType _ft );
 
-        /**
-         \brief PinNum refers to a exposed PWM Pin on your BBB, this enum can be expanded to include more if required.
-         */
-        enum PinNums {
-            PWM42 = 42, //!< GPIO PWM Pin Number 42
-            PWM22 = 22, //!< GPIO PWM Pin Number 22
-            PWM19 = 19, //!< GPIO PWM Pin Number 19
-            PWM14 = 14, //!< GPIO PWM Pin Number 14
-        };
+        char* GetFilePath( );
 
-        BlockNums BlockNum;
-        PinNums PinNum;
+        void SetPinNum( PWMPins _pin );
 
-    private:
+        void SetBlockNum( PinBlocks _block );
 
-        void SetPinNum( PinNums _pin );
+        void SetValType( ValType _ft );
 
-        void SetBlockNum( BlockNums _block );
+        void SetWriteVal( long int _val );
 
-        PWMOverlay _PWMOverlay;
+        void SetFilePaths( );
+
+        long Val2Write;
+
+        ifstream PWMFile;
+
+        string CurrentReading;
+
         PinOverlay* _PinOverlay;
+
+        char DutyPath[ 50 ];
+
+        char PeriodPath[ 50 ];
+
+        char RunPath[ 50 ];
 
     };
 
