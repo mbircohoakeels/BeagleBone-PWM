@@ -3,10 +3,11 @@
 //
 
 #include "PinOverlay.h"
+#include "../../PWM/PWMDevice.h"
 
 namespace abPWM {
 
-    PinOverlay::PinOverlay( int _BLOCK, int _PIN ) throw( PWMSetupException& ) {
+    PinOverlay::PinOverlay( PinBlocks _BLOCK, PWMPins _PIN ) throw( PWMSetupException& ) {
 
         this->SetBlock( _BLOCK );
         this->SetPin( _PIN );
@@ -31,9 +32,9 @@ namespace abPWM {
 
     }
 
-    void PinOverlay::SetBlock( int _BLOCK ) { this->Block = _BLOCK; }
+    void PinOverlay::SetBlock( PinBlocks _BLOCK ) { this->Block = _BLOCK; }
 
-    void PinOverlay::SetPin( int _PIN ) { this->Pin = _PIN; }
+    void PinOverlay::SetPin( PWMPins _PIN ) { this->Pin = _PIN; }
 
     void PinOverlay::FindPinDir( ) {
         for( int i = 1; i <= RETRIES; i++ ) {

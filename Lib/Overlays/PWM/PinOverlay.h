@@ -12,12 +12,11 @@
 
 namespace abPWM {
 
-    class PinOverlay : public iDeviceOverlay {
-
+    class PinOverlay : public abIDevice::iDeviceOverlay {
 
     public:
 
-        PinOverlay( int _BLOCK, int _PIN ) throw( PWMSetupException& );
+        PinOverlay( PinBlocks _BLOCK, PWMPins _PIN ) throw( PWMSetupException& );
 
         struct OverlaySettings {
             const char *Overlay = "bone_pwm_P";
@@ -26,17 +25,18 @@ namespace abPWM {
             bool OverlayLoaded;
         } Settings;
 
+        char PinOverlayDir[MAX_BUF]; //!< Stores the PWM folder name
+
     private:
-        void SetBlock( int _BLOCK );
-        void SetPin( int _PIN );
+        void SetBlock( PinBlocks _BLOCK );
+        void SetPin( PWMPins _PIN );
 
         void FindPinDir( );
 
-        char PinOverlayDir[MAX_BUF]; //!< Stores the PWM folder name
         char PinOverlayName[24];
 
-        int Pin;
-        int Block;
+        PWMPins Pin;
+        PinBlocks Block;
 
     };
 
