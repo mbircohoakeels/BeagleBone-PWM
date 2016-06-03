@@ -10,7 +10,7 @@
 
 namespace abPWM {
 
-    class PWMOverlay : public iDeviceOverlay {
+    class PWMOverlay : public abIDevice::iDeviceOverlay {
     public:
 
         PWMOverlay( ) throw( PWMSetupException& );
